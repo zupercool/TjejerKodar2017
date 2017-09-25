@@ -1,0 +1,13 @@
+body {
+    background-color: #333333;
+    color: #AAAAAA;
+}
+h1 {
+    font-family: "Tahoma";
+}
+
+#gameContainer { 
+	background-color: purple;
+    height: 100;
+    width: 100;
+}
