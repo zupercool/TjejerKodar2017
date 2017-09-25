@@ -2,6 +2,7 @@
     <head>
         <title> Tjejer Kodar Exercises </title>
         <link href="style.css" rel="stylesheet"/>
+        <script src="libs/phaser.min.js"></script>
     </head>
     <body>
      	<h1>My Page Title</h1>
@@ -11,6 +12,9 @@
         <a href="http://www.google.com">Click here plzz</a>
         
         <div id="gameContainer"></div>
+        <script>
+            var game = new Phaser.Game(400,600,Phaser.AUTO, 'gameContainer');
+        </script>
         
         <p><b>Here is some more text.</b></p>
         
