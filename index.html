@@ -1,6 +1,26 @@
 <html>
+    <head>
+        <title> Tjejer Kodar Exercises </title>
+        <link href="style.css" rel="stylesheet"/>
+        <script src="libs/phaser.min.js"></script>
+        <script src="source/maingamestate.js"></script>
+    </head>
     <body>
-        <h1>My First Website</h1>
-        <p>Here is some text that I want to appear under the page title!</p>
+     	<h1>Spacegame - a game in space</h1>
+        <p><b>This is the most awesome game!</b></p>
+        <p>Try it out NOW</p>
+        
+        <div id="gameContainer"></div>
+        
+        <script>
+            var game = new Phaser.Game(400,600,Phaser.AUTO, 'gameContainer');
+            game.state.add("MainGame", mainGameState);
+            game.state.start("MainGame");
+        </script>
+        
+        <img src="barcelona.jpg" />
+        
+        <a href="http://www.google.com">Click here plzz</a>
+        
     </body>
 </html>
