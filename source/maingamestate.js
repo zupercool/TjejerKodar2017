@@ -1,5 +1,7 @@
 // Create an empty object
-var mainGameState = { };
+var mainGameState = {
+    
+};
     
 // Add the preload function
 mainGameState.preload = function () {
@@ -13,12 +15,40 @@ mainGameState.preload = function () {
     game.load.audio('player_fire', 'assets/audio/player_fire_01.mp3');
     game.load.audio('asteroid_hit', 'assets/audio/asteroid_hit_01.mp3');
     game.load.audio('asteroid_death', 'assets/audio/asteroid_death_01.mp3');
+    game.load.audio('player_hit', 'assets/audio/player_hit_01.mp3');
 };
 
 // Add the create function
 mainGameState.create = function () {
     //background
     game.add.sprite(0, 0, 'space-bg');
+    
+    //player score
+    var textStyleText = {
+        fill: "white",
+        font: "18px Arial",
+        align: "center"
+    }
+    var textStyleNumber = {
+        fill: "white",
+        font: "16px Arial",
+        align: "center"
+    }
+    this.playerScore = 0;
+    this.playerScoreText = game.add.text(game.width*0.13, game.height*0.05, "SCORE", textStyleText);
+    this.playerScoreNumber = game.add.text(game.width*0.13, game.height*0.1, this.playerScore, textStyleNumber);
+    this.playerScoreText.anchor.setTo(0.5, 0.5);
+    this.playerScoreNumber.anchor.setTo(0.5, 0.5);
+    this.playerScoreText.fixedToCamera = true;
+    this.playerScoreNumber.FixedToCamera = true;
+    
+    this.playerLives = 5;
+    this.playerLivesText = game.add.text(game.width*0.9, game.height*0.05, "LIVES", textStyleText);
+    this.playerLivesNumber = game.add.text(game.width*0.9, game.height*0.1, this.playerLives, textStyleNumber);
+    this.playerLivesText.anchor.setTo(0.5, 0.5);
+    this.playerLivesNumber.anchor.setTo(0.5, 0.5);
+    this.playerLivesText.fixedToCamera = true;
+    this.playerLivesNumber.fixedToCamera = true;
     
     //Asteroids
     this.asteroidTimer = 2.0;
@@ -48,10 +78,7 @@ mainGameState.create = function () {
 };
 
 // Add the update function
-mainGameState.update = function () {
-    
-    this.fireKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
-    
+mainGameState.update = function () {    
     //styrning
     if (this.cursors.right.isDown) {
         this.playerShip.body.velocity.x = 200;
@@ -67,6 +94,7 @@ mainGameState.update = function () {
     }
     
     //Bullets
+    this.fireKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
     this.bulletTimer -= game.time.physicsElapsed;
     
     if (this.fireKey.isDown && this.bulletTimer <= 0.0) {
@@ -97,6 +125,11 @@ mainGameState.update = function () {
     
     //Collisions
     game.physics.arcade.collide(this.asteroids, this.bullets, mainGameState.onAsteroidBulletCollision, null, this);
+    
+    game.physics.arcade.collide(this.asteroids, this.playerShip, mainGameState.onAsteroidPlayerCollision, null, this);
+    
+    //lives and score
+    this.playerScoreNumber.setText(this.playerScore);
 };
 
 mainGameState.shootBullets = function () {
@@ -107,7 +140,7 @@ mainGameState.shootBullets = function () {
     this.bullets.add(this.bullet);
     var player_fire = game.add.audio('player_fire');
     player_fire.play();
-}
+};
 
 mainGameState.spawnAsteroid = function () {
     var asteroidX = game.rnd.integerInRange(50, 350);
@@ -121,18 +154,31 @@ mainGameState.spawnAsteroid = function () {
     this.asteroid.body.velocity.y = 100;
     this.asteroid.body.angularVelocity = asteroidRotate;
     this.asteroids.add(this.asteroid);
-}
+};
 
+//asteroid, bullet
 mainGameState.onAsteroidBulletCollision = function (object1, object2) {
     object1.pendingDestroy = true;
     object2.pendingDestroy = true;
     var asteroid_hit = game.add.audio('asteroid_hit');
     asteroid_hit.play();
+    this.playerScore ++;
     //var asteroid_death = game.add.audio('asteroid_death');
     //asteroid_death.play();
+};
+
+mainGameState.destroyAsteroid = function(asteroid){
+    asteroid.pendingDestroy = true;
+    playerScore += 10;
 }
 
-
-
+//asteroid, player
+mainGameState.onAsteroidPlayerCollision = function (object1, object2) {
+    //object1.pendingDestroy = true;
+    object1.pendingDestroy = true;
+    this.playerLives --;
+    var player_hit = game.add.audio('player_hit');
+    player_hit.play();
+};
 
 
