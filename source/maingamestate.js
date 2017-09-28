@@ -90,11 +90,13 @@ mainGameState.update = function () {
             this.bullets.children[i].destroy();
             }
     }
+    
+    //Collisions
+    game.physics.arcade.collide(this.asteroids, this.bullets, mainGameState.onAsteroidBulletCollision, null, this);
 };
 
 mainGameState.shootBullets = function () {
     var bulletX = this.playerShip.position.x - 14;
-    console.log(bulletX);
     this.bullet = game.add.sprite(bulletX, game.height*0.8, 'bullet');
     game.physics.arcade.enable(this.bullet);
     this.bullet.body.velocity.y = -100;
@@ -114,3 +116,13 @@ mainGameState.spawnAsteroid = function () {
     this.asteroid.body.angularVelocity = asteroidRotate;
     this.asteroids.add(this.asteroid);
 }
+
+mainGameState.onAsteroidBulletCollision = function (object1, object2) {
+    object1.pendingDestroy = true;
+    object2.pendingDestroy = true;
+}
+
+
+
+
+
