@@ -7,6 +7,7 @@ mainGameState.preload = function () {
     game.load.image('space-bg', 'assets/images/space-bg.jpg');
     game.load.image('player-ship', 'assets/images/player-ship.png');
     game.load.image('asteroid', 'assets/images/fish.png');
+    game.load.image('bullet', 'assets/images/bullet-fire.png');
     game.load.audio('main-game-music', 'assets/music/maingame.mp3');
 };
 
@@ -15,9 +16,13 @@ mainGameState.create = function () {
     //background
     game.add.sprite(0, 0, 'space-bg');
     
-    //Timer to handle asteroids
+    //Asteroids
     this.asteroidTimer = 2.0;
     this.asteroids = game.add.group();
+    
+    //Bullets
+    this.bulletTimer = 0.3;
+    this.bullets = game.add.group();
     
     //music
     var music = game.add.audio('main-game-music');
@@ -40,6 +45,9 @@ mainGameState.create = function () {
 
 // Add the update function
 mainGameState.update = function () {
+    
+    this.fireKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+    
     //styrning
     if (this.cursors.right.isDown) {
         this.playerShip.body.velocity.x = 200;
@@ -54,6 +62,14 @@ mainGameState.update = function () {
         this.playerShip.body.velocity.x = 0;
     }
     
+    //Bullets
+    this.bulletTimer -= game.time.physicsElapsed;
+    
+    if (this.fireKey.isDown && this.bulletTimer <= 0.0) {
+        this.shootBullets();
+        this.bulletTimer = 0.3;
+        }
+    
     //asteroider
     this.asteroidTimer -= game.time.physicsElapsed;
     
@@ -62,12 +78,28 @@ mainGameState.update = function () {
         this.asteroidTimer = 2.0;
     }
     
+    //Delete whats outside the screen
     for (var i=0; i<this.asteroids.children.length; i++) {
         if ((this.asteroids.children[i].y) > (game.height)) {
             this.asteroids.children[i].destroy();
         }
     }
+    
+    for (var i=0; i<this.bullets.children.length; i++) {
+        if (this.bullets.children[i].y < 0) {
+            this.bullets.children[i].destroy();
+            }
+    }
 };
+
+mainGameState.shootBullets = function () {
+    var bulletX = this.playerShip.position.x - 14;
+    console.log(bulletX);
+    this.bullet = game.add.sprite(bulletX, game.height*0.8, 'bullet');
+    game.physics.arcade.enable(this.bullet);
+    this.bullet.body.velocity.y = -100;
+    this.bullets.add(this.bullet);
+}
 
 mainGameState.spawnAsteroid = function () {
     var asteroidX = game.rnd.integerInRange(50, 350);
