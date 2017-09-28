@@ -8,7 +8,11 @@ mainGameState.preload = function () {
     game.load.image('player-ship', 'assets/images/player-ship.png');
     game.load.image('asteroid', 'assets/images/fish.png');
     game.load.image('bullet', 'assets/images/bullet-fire.png');
+    
     game.load.audio('main-game-music', 'assets/music/maingame.mp3');
+    game.load.audio('player_fire', 'assets/audio/player_fire_01.mp3');
+    game.load.audio('asteroid_hit', 'assets/audio/asteroid_hit_01.mp3');
+    game.load.audio('asteroid_death', 'assets/audio/asteroid_death_01.mp3');
 };
 
 // Add the create function
@@ -101,6 +105,8 @@ mainGameState.shootBullets = function () {
     game.physics.arcade.enable(this.bullet);
     this.bullet.body.velocity.y = -100;
     this.bullets.add(this.bullet);
+    var player_fire = game.add.audio('player_fire');
+    player_fire.play();
 }
 
 mainGameState.spawnAsteroid = function () {
@@ -120,6 +126,10 @@ mainGameState.spawnAsteroid = function () {
 mainGameState.onAsteroidBulletCollision = function (object1, object2) {
     object1.pendingDestroy = true;
     object2.pendingDestroy = true;
+    var asteroid_hit = game.add.audio('asteroid_hit');
+    asteroid_hit.play();
+    //var asteroid_death = game.add.audio('asteroid_death');
+    //asteroid_death.play();
 }
 
 
