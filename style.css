@@ -1,13 +1,19 @@
 body {
+    background-image: url("assets/images/space-bg.jpg");
     background-color: #333333;
     color: #AAAAAA;
     font-family: "Tahoma";
+    text-align: center;
 }
 h1 {
-
+    text-align: center;
 }
 
 #gameContainer {
     height: 600;
     width: 400;
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+    
 }
